@@ -1,45 +1,19 @@
-from django.contrib.auth import authenticate, get_user_model
 from rest_framework import serializers
-
-from accuai_backend.users.models import User as UserType
-
-User = get_user_model()
+from accuai_backend.users.models import User
 
 
-class UserSerializer(serializers.ModelSerializer[UserType]):
+class UserSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
-        fields = ["name", "url"]
+        fields = ["id", "email", "name", "password"]
 
-        extra_kwargs = {
-            "url": {"view_name": "api:user-detail", "lookup_field": "pk"},
-        }
-
-
-class LoginSerializer(serializers.Serializer):
-    #Validates login of a Use
-
-    email = serializers.EmailField(allow_blank=False, required=True)
-    password = serializers.CharField(allow_blank=False, required=True)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.authed_user = None
-
-    def get_user(self):
-        return self.authed_user
-
-    def validate(self, attrs):
-        try:
-            email = attrs["email"].strip()
-            password = attrs["password"]
-            try:
-                self.authed_user = authenticate(email=email, password=password)
-            except ValueError:
-                self.authed_user = None
-
-            if self.authed_user:
-                return attrs
-        except (UserType.DoesNotExist, KeyError):
-            pass
-        raise serializers.ValidationError("Your login details were incorrect. Please try again.")
+    def create(self, validated_data):
+        user = User.objects.create(
+            email=validated_data['email'],
+            name=validated_data['name'],
+            is_verified=False
+            )
+        user.set_password(validated_data['password'])
+        user.save()
+        return user

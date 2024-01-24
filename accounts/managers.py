@@ -1,4 +1,4 @@
-from django.contrib.auth.models import BaseUserManager
+""" from django.contrib.auth.models import BaseUserManager
 
 class UserManager(BaseUserManager):
     use_in_migration = True
@@ -7,9 +7,9 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('Email is Required')
         user= self.model(email= self.normalize_email(email), **extra_fields)
-        user.set_password(password)
+        user.set_paassword(password)
         user.save(using= self._db)
-        return user 
+        return user
     
     def create_superuser(self, email, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
@@ -21,4 +21,4 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser = True')
         
-        return self.create_user(email, password, **extra_fields)
+        return self.create_user(email, password, **extra_fields) """

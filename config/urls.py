@@ -7,9 +7,12 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
-from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
-from accounts.api.views import MyTokenObtainPairView
+from accuai_backend.users.api.views import RegisterViewSet, verify_email
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
@@ -30,10 +33,12 @@ urlpatterns += [
     # API base url
     path("api/", include("config.api_router")),
     # register api
-    # path('api/auth/registration/', include('rest_framework.registration.urls')),
+    path('api/auth/register/', RegisterViewSet.as_view({'post': 'register'}), name="sign_up"),
+    path('api/auth/verify-email/<str:uid>/<str:token>/', verify_email, name='verify_email'),
+    path('api/auth/resend_verification_email/', RegisterViewSet.as_view({'post': 'resend_verification_email'}), name='resend_verification_email'),
     # DRF auth token
-    path("auth-token/", obtain_auth_token),
-    path("api/auth/token/", MyTokenObtainPairView.as_view(), name="token_obtain_pair"),
+    #path("auth-token/", obtain_auth_token),
+    path("api/auth/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path(

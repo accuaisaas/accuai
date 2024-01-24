@@ -1,0 +1,10 @@
+Hello {{ user.name }},
+
+Thank you for registering with our platform. To activate your account, please click the link below:
+
+{{ protocol }}://{{ domain }}{% url 'verify_email' uid=uid token=token %}
+
+If you did not register on our platform, please ignore this email.
+
+Best regards,
+Your Platform Team
