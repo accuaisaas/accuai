@@ -35,10 +35,11 @@ urlpatterns += [
     # register api
     path('api/auth/register/', RegisterViewSet.as_view({'post': 'register'}), name="sign_up"),
     path('api/auth/verify-email/<str:uid>/<str:token>/', verify_email, name='verify_email'),
-    path('api/auth/resend_verification_email/', RegisterViewSet.as_view({'post': 'resend_verification_email'}), name='resend_verification_email'),
+    path('api/auth/resend-verification-email/', RegisterViewSet.as_view({'post': 'resend_verification_email'}), name='resend_verification_email'),
     # DRF auth token
-    #path("auth-token/", obtain_auth_token),
     path("api/auth/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/auth/forgot-password/", RegisterViewSet.as_view({'post': 'forgot_password'}), name="forgot_password"),
+    path("api/auth/reset-password/", RegisterViewSet.as_view({'post': 'reset_password'}), name="reset_password"),
     path("api/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path(
